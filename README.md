@@ -22,3 +22,7 @@ It allows users to input subjects, select difficulty levels, estimate marks, and
 
 ### GAP-Calculator
 https://ishansandesh.github.io/GPA/GPA-Calculator.html
+
+---
+### GAP-Calculator
+https://ishansandesh.github.io/GPA/GPA-Analyzer/index.htmls
