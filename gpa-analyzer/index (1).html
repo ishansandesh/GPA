@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University GPA Analyzer - Academic Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+</head>
+<body>
+    <div class="stars"></div>
+    
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1>🎓 University GPA Analyzer</h1>
+                <p>Advanced Academic Performance Analytics Dashboard</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn-icon" id="resetAllBtn" title="Reset all data">
+                    <span>🔄</span>
+                </button>
+                <button class="btn-icon" id="exportBtn" title="Export results">
+                    <span>📥</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content Grid -->
+        <div class="main-grid">
+            <!-- Left Column - Input Section -->
+            <aside class="sidebar">
+                <div class="card glassmorphism">
+                    <div class="card-header">
+                        <h2>Add Subject</h2>
+                        <span class="badge" id="subjectCount">0</span>
+                    </div>
+
+                    <!-- Subject Input Form -->
+                    <form id="subjectForm" class="form-group">
+                        <div class="form-field">
+                            <label>Subject Name</label>
+                            <input type="text" id="subjectName" placeholder="e.g., Data Structures" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label>Credits</label>
+                                <input type="number" id="credits" min="1" max="6" value="3" required>
+                            </div>
+                            <div class="form-field">
+                                <label>Difficulty</label>
+                                <select id="difficulty" required>
+                                    <option value="easy">Easy</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="hard">Hard</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-field">
+                            <label>Marks (Optional) <span class="optional">leave blank for auto-estimate</span></label>
+                            <input type="number" id="marks" min="0" max="100" placeholder="0-100">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <span>+</span> Add Subject
+                        </button>
+                    </form>
+
+                    <!-- Subjects List -->
+                    <div class="subjects-container" id="subjectsContainer">
+                        <div class="empty-state">
+                            <span class="empty-icon">📚</span>
+                            <p>No subjects added yet</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Semester Selector -->
+                <div class="card glassmorphism semester-card">
+                    <div class="card-header">
+                        <h3>Semesters</h3>
+                    </div>
+                    <div class="semester-tabs" id="semesterTabs">
+                        <button class="semester-btn active" data-semester="1">Sem 1</button>
+                        <button class="semester-btn" data-semester="2">Sem 2</button>
+                        <button class="semester-btn" data-semester="3">Sem 3</button>
+                        <button class="semester-btn" data-semester="4">Sem 4</button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Right Column - Analytics Section -->
+            <main class="content">
+                <!-- GPA Results Card -->
+                <div class="card glassmorphism gpa-card">
+                    <div class="gpa-content">
+                        <div class="gpa-section">
+                            <div class="gpa-label">SGPA (Semester)</div>
+                            <div class="gpa-value" id="sgpaValue">0.00</div>
+                            <div class="gpa-status" id="sgpaStatus">No subjects</div>
+                        </div>
+                        <div class="gpa-divider"></div>
+                        <div class="gpa-section">
+                            <div class="gpa-label">CGPA (Cumulative)</div>
+                            <div class="gpa-value" id="cgpaValue">0.00</div>
+                            <div class="gpa-status" id="cgpaStatus">Track across semesters</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="charts-grid">
+                    <!-- Marks Distribution Chart -->
+                    <div class="card glassmorphism chart-card">
+                        <div class="card-header">
+                            <h3>📊 Marks by Subject</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="marksChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Performance Analysis Chart -->
+                    <div class="card glassmorphism chart-card">
+                        <div class="card-header">
+                            <h3>📈 Difficulty vs Performance</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="performanceChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card glassmorphism">
+                        <div class="stat-icon">📚</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Total Credits</div>
+                            <div class="stat-value" id="totalCredits">0</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card glassmorphism">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Average Marks</div>
+                            <div class="stat-value" id="averageMarks">0.0</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card glassmorphism">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Grade Points</div>
+                            <div class="stat-value" id="totalGradePoints">0.0</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card glassmorphism">
+                        <div class="stat-icon">⚠️</div>
+                        <div class="stat-content">
+                            <div class="stat-label">At-Risk Subjects</div>
+                            <div class="stat-value" id="riskSubjects">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Study Suggestions -->
+                <div class="card glassmorphism suggestions-card">
+                    <div class="card-header">
+                        <h3>💡 Study Improvement Suggestions</h3>
+                    </div>
+                    <div class="suggestions-container" id="suggestionsContainer">
+                        <p class="empty-suggestion">Add subjects to receive personalized study suggestions</p>
+                    </div>
+                </div>
+
+                <!-- Risk Analysis -->
+                <div class="card glassmorphism risk-card">
+                    <div class="card-header">
+                        <h3>⚠️ Risk Analysis</h3>
+                    </div>
+                    <div class="risk-container" id="riskContainer">
+                        <p class="empty-suggestion">No high-risk subjects detected</p>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Floating Action Buttons -->
+        <div class="fab-group">
+            <button class="fab fab-primary" id="calculateBtn" title="Calculate GPA">
+                <span>⚡</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Export Modal -->
+    <div class="modal" id="exportModal">
+        <div class="modal-content glassmorphism">
+            <div class="modal-header">
+                <h2>Export Results</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="exportContent">
+                <!-- Export content will be generated here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+                <button class="btn btn-primary" onclick="downloadExport()">Download as Text</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
