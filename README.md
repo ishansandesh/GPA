@@ -25,4 +25,4 @@ https://ishansandesh.github.io/GPA/GPA-Calculator.html
 
 ---
 ### GAP-Calculator
-https://ishansandesh.github.io/GPA/GPA-Analyzer/index.htmls
+https://ishansandesh.github.io/GPA/GPA-Analyzer/index.html
